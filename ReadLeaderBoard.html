@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Leaderboard</title>
+    <link rel = "stylesheet" href="./src/style.css">
+</head>
+<body>
+    <a href="./index.html">Link to game page</a>
+    <br>
+    <a href="./AddGame.html">Link to add game</a>
+    <h3 style="text-align: center;">Game LeaderBoard</h3>
+    <table id="leaderboard">
+        <tr>
+            <th>id</th>
+            <th>Player</th>
+            <th>Score</th>
+            <th>Time</th>
+        </tr>
+    </table>
+    <button onclick="addleaderboard()">New Entry</button>
+    <script>
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var gameid = urlParams.get("id");
+
+        fetch(`https://lime-faithful-hippo.cyclic.app/api/leaderBoard/${gameid}`)
+        .then(response => response.json())
+        .then(convertedObject => createTable(convertedObject.Leaderboard));
+
+        function createTable(data)
+        {
+            var table = document.getElementById("leaderboard");
+            var tbody = document.createElement("tbody");
+
+            for (var tableelements of data)
+            {
+                var tr = document.createElement("tr");
+                tbody.appendChild(tr);
+
+                var columns = ["id", "Player", "Score", "Time"];
+                for (var key of columns)
+                {
+                    var td = document.createElement("td");
+                    if (key === "id" || key === "Player" || key === "Score" || key ==="Time")
+                    {
+                        td.textContent = tableelements[key];
+                        tr.appendChild(td);
+                    }
+                }
+            }
+            table.appendChild(tbody);
+        }
+
+        function addleaderboard()
+        {
+            window.location.href = `./AddLeaderboard.html?id=${gameid}`;
+        }
+    </script>
+</body>
+</html>
+

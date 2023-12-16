@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Games</title>
+    <link rel = "stylesheet" href="./src/style.css">
+</head>
+<body>
+    <a href="./index.html">Link to game page</a>
+    <br>
+    <a href="./AddGame.html">Link to add game</a>
+    <h3 style="text-align: center;">Games</h3>
+    <table id="games">
+        <tr>
+            <th>id</th>
+            <th>GameName</th>
+            <th>Platform</th>
+        </tr>
+    </table>
+    <button onclick="addgame()">New Game</button>
+    <script>
+        fetch("https://lime-faithful-hippo.cyclic.app/api/games")
+        .then((response) => response.json())
+        .then((convertedObject) => createTable(convertedObject));
+
+        function createTable(data)
+        {
+            var table = document.getElementById("games");
+            var tbody = document.createElement("tbody");
+
+            for (var tableelements of data)
+            {
+                var tr = document.createElement("tr");
+                tbody.appendChild(tr);
+
+                var columns = ["id", "GameName", "Platform"];
+                for (var key of columns)
+                {
+                    var td = document.createElement("td");
+                    if (key === "id" || key === "Platform")
+                    {
+                        td.textContent = tableelements[key];
+                        tr.appendChild(td);
+                    }
+                    else if (key === "GameName")
+                    {
+                        var leaderboardlinks = document.createElement("a");
+                        leaderboardlinks.href = `./ReadLeaderBoard.html?id=${tableelements.id}`;
+                        leaderboardlinks.textContent = tableelements[key];
+                        td.appendChild(leaderboardlinks);
+                        tr.appendChild(td);
+                    }
+                }
+            }
+            table.appendChild(tbody);
+        }
+
+        function addgame()
+        {
+            window.location.href = "./AddGame.html";
+        }
+    </script>
+</body>
+</html>

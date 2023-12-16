@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Leaderboard</title>
+    <style>
+        button {
+            background-color: rgba(0, 70, 176, 0.66);
+            color: white;
+            display: block;
+            margin: auto;
+            height: 40px;
+            width: 100px;
+        }
+
+        table {
+            margin: 25px auto;
+        }
+
+        input {
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <a href="./index.html">Link to game page</a>
+    <br>
+    <a href="./AddGame.html">Link to add game</a>
+    <h3 style="text-align: center;">Add LeaderBoard</h3>
+    <table>
+        <tr>
+            <td>Player: </td>
+            <td><input type="text" id="player"></td>
+        </tr>
+        <tr>
+            <td>Score: </td>
+            <td><input type="number" id="score"></td>
+        </tr>
+        <tr>
+            <td>Time: </td>
+            <td><input type="text" id="time" pattern="([0-9]{2}):([0-5][0-9]):([0-5][0-9]):([0-9]{2})" required></td>
+        </tr>
+    </table>
+    <button onclick="addLeaderBoard()">Submit</button>
+    <script>
+        function addLeaderBoard() {
+            var queryString = window.location.search;
+            var url = new URLSearchParams(queryString);
+            var theids = url.get("id");
+            var gameid = parseInt(theids);
+            console.log(gameid);
+
+            var player = document.getElementById("player").value;
+            var score = document.getElementById("score").value;
+            var time = document.getElementById("time").value;
+
+            var data = {
+                "gameID": `${gameid}`,
+                "player": player,
+                "score": score,
+                "time": time
+            };
+
+            fetch(`https://lime-faithful-hippo.cyclic.app/api/leaderBoard/${gameid}`, {
+                method: "POST",
+                mode: "cors",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response.message)
+            })
+            .catch(errorsReturned => {
+                console.log("Error");
+                console.log(errorsReturned);
+            })
+        }
+    </script>
+</body>
+</html>
